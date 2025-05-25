@@ -33,8 +33,7 @@ export default function DepartmentsPage() {
   const [selectedDepartment, setSelectedDepartment] = useState<Department | null>(null);
   const [newDepartment, setNewDepartment] = useState({
     name: "",
-    manager: "",
-    description: "",
+    location: "",
   });
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -85,8 +84,7 @@ export default function DepartmentsPage() {
   const filteredDepartments = sortedDepartments.filter(
     (department) =>
       department.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      (department.manager?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false) ||
-      (department.description?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false),
+      (department.location?.toLowerCase().includes(searchTerm.toLowerCase()) ?? false)
   );
 
   const handleAddDepartment = async () => {
@@ -95,22 +93,21 @@ export default function DepartmentsPage() {
         setError("Department name is required");
         return;
       }
-      if (!newDepartment.manager.trim()) {
-        setError("Department manager is required");
+      if (!newDepartment.location.trim()) {
+        setError("Department location is required");
         return;
       }
 
       const departmentData = {
         name: newDepartment.name.trim(),
-        manager: newDepartment.manager.trim(),
-        description: newDepartment.description?.trim(),
+        location: newDepartment.location.trim(),
         employeeCount: 0
       };
 
       await departmentApi.createDepartment(departmentData);
       await loadDepartments();
       setIsAddDialogOpen(false);
-      setNewDepartment({ name: "", manager: "", description: "" });
+      setNewDepartment({ name: "", location: "" });
     } catch (error: any) {
       console.error("Failed to add department:", error);
       setError(error.message || "Failed to add department. Please try again later.");
@@ -124,15 +121,14 @@ export default function DepartmentsPage() {
         setError("Department name is required");
         return;
       }
-      if (!selectedDepartment.manager.trim()) {
-        setError("Department manager is required");
+      if (!selectedDepartment.location.trim()) {
+        setError("Department location is required");
         return;
       }
 
       const departmentData = {
         name: selectedDepartment.name.trim(),
-        manager: selectedDepartment.manager.trim(),
-        description: selectedDepartment.description?.trim(),
+        location: selectedDepartment.location.trim(),
         employeeCount: selectedDepartment.employeeCount
       };
 
@@ -199,19 +195,11 @@ export default function DepartmentsPage() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="manager">Department Manager</Label>
+                  <Label htmlFor="location">Department Location</Label>
                   <Input
-                    id="manager"
-                    value={newDepartment.manager}
-                    onChange={(e) => setNewDepartment({ ...newDepartment, manager: e.target.value })}
-                  />
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Textarea
-                    id="description"
-                    value={newDepartment.description}
-                    onChange={(e) => setNewDepartment({ ...newDepartment, description: e.target.value })}
+                    id="location"
+                    value={newDepartment.location}
+                    onChange={(e) => setNewDepartment({ ...newDepartment, location: e.target.value })}
                   />
                 </div>
               </div>
@@ -276,7 +264,7 @@ export default function DepartmentsPage() {
             <TableHeader className="bg-gray-100 text-gray-800">
               <TableRow>
                 <TableHead>Name</TableHead>
-                <TableHead>Description</TableHead>
+                <TableHead>Location</TableHead>
                 <TableHead>Employees</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
@@ -292,7 +280,7 @@ export default function DepartmentsPage() {
                 filteredDepartments.map((department) => (
                   <TableRow key={department.id} className="hover:bg-gray-100 text-gray-800">
                     <TableCell className="font-medium text-gray-900">{department.name}</TableCell>
-                    <TableCell className="text-gray-800">{department.description}</TableCell>
+                    <TableCell className="text-gray-800">{department.location}</TableCell>
                     <TableCell className="text-gray-800">{department.employeeCount}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
@@ -333,22 +321,12 @@ export default function DepartmentsPage() {
                                     />
                                   </div>
                                   <div className="space-y-2">
-                                    <Label htmlFor="edit-manager">Department Manager</Label>
+                                    <Label htmlFor="edit-location">Department Location</Label>
                                     <Input
-                                      id="edit-manager"
-                                      value={selectedDepartment.manager || ""}
+                                      id="edit-location"
+                                      value={selectedDepartment.location || ""}
                                       onChange={(e) =>
-                                        setSelectedDepartment({ ...selectedDepartment, manager: e.target.value })
-                                      }
-                                    />
-                                  </div>
-                                  <div className="space-y-2">
-                                    <Label htmlFor="edit-description">Description</Label>
-                                    <Textarea
-                                      id="edit-description"
-                                      value={selectedDepartment.description || ""}
-                                      onChange={(e) =>
-                                        setSelectedDepartment({ ...selectedDepartment, description: e.target.value })
+                                        setSelectedDepartment({ ...selectedDepartment, location: e.target.value })
                                       }
                                     />
                                   </div>

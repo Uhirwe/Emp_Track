@@ -24,6 +24,7 @@ export default function SignUpPage() {
     password: "",
     confirmPassword: "",
     role: "",
+    organisationName: "",
   })
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -144,6 +145,21 @@ const mapRole = (val: string) => {
                     autoCorrect="off"
                     className="bg-black border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring-yellow-500"
                     value={formData.email}
+                    onChange={handleChange}
+                  />
+                </div>
+                     <div className="grid gap-2">
+                  <Label htmlFor="email" className="text-gray-300">Organisation Name</Label>
+                  <Input
+                    id="email"
+                    name="email"
+                    placeholder="Engineering company"
+                   
+                    autoCapitalize="none"
+                    autoComplete="email"
+                    autoCorrect="off"
+                    className="bg-black border-gray-700 text-gray-100 focus:border-yellow-500 focus:ring-yellow-500"
+                    value={formData.organisationName}
                     onChange={handleChange}
                   />
                 </div>
