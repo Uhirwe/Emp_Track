@@ -45,10 +45,7 @@ export default function SalaryPage() {
   }>({
     employee: {} as Employee,
     department: {} as Department,
-    basicSalary: "",
-    allowances: "",
-    deductions: "",
-    paymentDate: format(new Date(), "yyyy-MM-dd"),
+  
     status: "PENDING",
   })
   const [isLoading, setIsLoading] = useState(true)

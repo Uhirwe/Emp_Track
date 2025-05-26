@@ -101,7 +101,8 @@ export default function DepartmentsPage() {
       const departmentData = {
         name: newDepartment.name.trim(),
         location: newDepartment.location.trim(),
-        employeeCount: 0
+        employeeCount: 0,
+        createdDate: new Date().toISOString()
       };
 
       await departmentApi.createDepartment(departmentData);

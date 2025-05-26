@@ -22,6 +22,14 @@ import {
 import { Label } from "@/components/ui/label";
 import { employeeApi, departmentApi } from "@/lib/api/employee";
 import { Employee, Department } from "@/types/employee";
+import { SelectItem } from "@/components/ui/select";
+import { SelectContent } from "@/components/ui/select";
+
+declare module 'jspdf' {
+  interface jsPDF {
+    autoTable: (options: any) => jsPDF;
+  }
+}
 
 export default function EmployeesPage() {
   const router = useRouter();
@@ -40,7 +48,19 @@ export default function EmployeesPage() {
     lastName: "",
     email: "",
     phone: "",
-    department: { id: 0, name: "", manager: "", createdDate: "", employeeCount: 0 },
+    department: { 
+      id: 0, 
+      name: "", 
+      location: "", 
+      employeeCount: 0, 
+      createdDate: new Date().toISOString().split('T')[0] 
+    },
+    contractType: "",
+    contractLength: "",
+    grossAmount: "",
+    taxDeductions: "",
+    insuranceDeductions: "",
+    otherDeductions: ""
   });
 
   useEffect(() => {
@@ -96,7 +116,19 @@ export default function EmployeesPage() {
         lastName: "",
         email: "",
         phone: "",
-        department: departments[0] || { id: 0, name: "", manager: "", createdDate: "", employeeCount: 0 },
+        department: departments[0] || { 
+          id: 0, 
+          name: "", 
+          location: "", 
+          employeeCount: 0, 
+          createdDate: new Date().toISOString().split('T')[0] 
+        },
+        contractType: "",
+        contractLength: "",
+        grossAmount: "",
+        taxDeductions: "",
+        insuranceDeductions: "",
+        otherDeductions: ""
       });
     } catch (error: any) {
       console.error("Failed to add employee:", error);
@@ -224,6 +256,73 @@ export default function EmployeesPage() {
                     />
                   </div>
                 </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="contractType">Contract Type</Label>
+                    <select
+                      id="contractType"
+                      value={newEmployee.contractType}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, contractType: e.target.value })}
+                      className="w-full border rounded p-2"
+                    >
+                      <option value="">Select Contract Type</option>
+                      <option value="FULL_TIME">Full Time</option>
+                      <option value="PART_TIME">Part Time</option>
+                      <option value="REMOTE">REMOTE</option>
+              
+                      
+                    </select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="contractLength">Contract Length (months)</Label>
+                    <Input
+                      id="contractLength"
+                      type="number"
+                      value={newEmployee.contractLength}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, contractLength: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="grossAmount">Gross Amount</Label>
+                    <Input
+                      id="grossAmount"
+                      type="number"
+                      value={newEmployee.grossAmount}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, grossAmount: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="taxDeductions">Tax Deductions</Label>
+                    <Input
+                      id="taxDeductions"
+                      type="number"
+                      value={newEmployee.taxDeductions}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, taxDeductions: e.target.value })}
+                    />
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="insuranceDeductions">Insurance Deductions</Label>
+                    <Input
+                      id="insuranceDeductions"
+                      type="number"
+                      value={newEmployee.insuranceDeductions}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, insuranceDeductions: e.target.value })}
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="otherDeductions">Other Deductions</Label>
+                    <Input
+                      id="otherDeductions"
+                      type="number"
+                      value={newEmployee.otherDeductions}
+                      onChange={(e) => setNewEmployee({ ...newEmployee, otherDeductions: e.target.value })}
+                    />
+                  </div>
+                </div>
                 <div className="space-y-2">
                   <Label htmlFor="department">Department</Label>
                   <select
@@ -236,10 +335,16 @@ export default function EmployeesPage() {
                         department: dept ? { 
                           id: dept.id, 
                           name: dept.name,
-                          manager: dept.manager,
-                          createdDate: dept.createdDate,
-                          employeeCount: dept.employeeCount
-                        } : { id: 0, name: "", manager: "", createdDate: new Date().toISOString().split('T')[0], employeeCount: 0 },
+                          location: dept.location,
+                          employeeCount: dept.employeeCount,
+                          createdDate: dept.createdDate
+                        } : { 
+                          id: 0, 
+                          name: "", 
+                          location: "", 
+                          employeeCount: 0, 
+                          createdDate: new Date().toISOString().split('T')[0] 
+                        },
                       });
                     }}
                     className="w-full border rounded p-2"
@@ -247,8 +352,7 @@ export default function EmployeesPage() {
                     <option value="">Select a department</option>
                     {departments.map((dept) => (
                       <option key={dept.id} value={dept.id}>
-                        {dept.name} ({dept.description}, {dept.employeeCount} employees, Created: {dept.createdDate})
-                        {dept.manager ? ` - Managed by ${dept.manager}` : ""}
+                        {dept.name} {dept.location ? ` - ${dept.location}` : ""}
                       </option>
                     ))}
                   </select>
@@ -421,10 +525,16 @@ export default function EmployeesPage() {
                                           department: dept ? { 
                                             id: dept.id, 
                                             name: dept.name,
-                                            manager: dept.manager,
-                                            createdDate: dept.createdDate,
-                                            employeeCount: dept.employeeCount
-                                          } : { id: 0, name: "", manager: "", createdDate: new Date().toISOString().split('T')[0], employeeCount: 0 },
+                                            location: dept.location,
+                                            employeeCount: dept.employeeCount,
+                                            createdDate: dept.createdDate
+                                          } : { 
+                                            id: 0, 
+                                            name: "", 
+                                            location: "", 
+                                            employeeCount: 0, 
+                                            createdDate: new Date().toISOString().split('T')[0] 
+                                          },
                                         });
                                       }}
                                       className="w-full border rounded p-2"
@@ -432,11 +542,70 @@ export default function EmployeesPage() {
                                       <option value="">Select a department</option>
                                       {departments.map((dept) => (
                                         <option key={dept.id} value={dept.id}>
-                                          {dept.name} ({dept.description}, {dept.employeeCount} employees, Created: {dept.createdDate})
-                                          {dept.manager ? ` - Managed by ${dept.manager}` : ""}
+                                          {dept.name} {dept.location ? ` - ${dept.location}` : ""}
                                         </option>
                                       ))}
                                     </select>
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                      <Label htmlFor="edit-grossAmount">Gross Amount</Label>
+                                      <Input
+                                        id="edit-grossAmount"
+                                        type="number"
+                                        value={selectedEmployee.grossAmount}
+                                        onChange={(e) =>
+                                          setSelectedEmployee({
+                                            ...selectedEmployee,
+                                            grossAmount: e.target.value,
+                                          })
+                                        }
+                                      />
+                                    </div>
+                                    <div className="space-y-2">
+                                      <Label htmlFor="edit-taxDeductions">Tax Deductions</Label>
+                                      <Input
+                                        id="edit-taxDeductions"
+                                        type="number"
+                                        value={selectedEmployee.taxDeductions}
+                                        onChange={(e) =>
+                                          setSelectedEmployee({
+                                            ...selectedEmployee,
+                                            taxDeductions: e.target.value,
+                                          })
+                                        }
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-4">
+                                    <div className="space-y-2">
+                                      <Label htmlFor="edit-insuranceDeductions">Insurance Deductions</Label>
+                                      <Input
+                                        id="edit-insuranceDeductions"
+                                        type="number"
+                                        value={selectedEmployee.insuranceDeductions}
+                                        onChange={(e) =>
+                                          setSelectedEmployee({
+                                            ...selectedEmployee,
+                                            insuranceDeductions: e.target.value,
+                                          })
+                                        }
+                                      />
+                                    </div>
+                                    <div className="space-y-2">
+                                      <Label htmlFor="edit-otherDeductions">Other Deductions</Label>
+                                      <Input
+                                        id="edit-otherDeductions"
+                                        type="number"
+                                        value={selectedEmployee.otherDeductions}
+                                        onChange={(e) =>
+                                          setSelectedEmployee({
+                                            ...selectedEmployee,
+                                            otherDeductions: e.target.value,
+                                          })
+                                        }
+                                      />
+                                    </div>
                                   </div>
                                 </div>
                               )}

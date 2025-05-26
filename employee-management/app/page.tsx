@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, BarChart3, Clock, Users, Building, Calendar, CreditCard, Shield, Zap, CheckCircle2 } from "lucide-react";
+import { ArrowRight, BarChart3, Clock, Users, Building, Calendar, Shield, Zap, CheckCircle2, CreditCard } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 export default function LandingPage() {
@@ -88,15 +88,24 @@ export default function LandingPage() {
                     </div>
                   </div>
                   
-                  {/* Floating elements */}
-                  <div className="absolute top-10 -right-6 p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg">
+                  {/* Floating elements adjusted for equal spacing */}
+                  <div className="absolute top-[15%] left-[15%] p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg transform -translate-x-1/2 -translate-y-1/2">
+                    <Calendar className="h-6 w-6 text-yellow-400" />
+                  </div>
+                   <div className="absolute top-[15%] right-[15%] p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg transform translate-x-1/2 -translate-y-1/2">
                     <Users className="h-6 w-6 text-yellow-400" />
                   </div>
-                  <div className="absolute bottom-10 -left-6 p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg">
+                   <div className="absolute top-1/2 left-0 p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg transform -translate-x-1/2 -translate-y-1/2">
+                    <Clock className="h-6 w-6 text-yellow-400" />
+                  </div>
+                   <div className="absolute top-1/2 right-0 p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg transform translate-x-1/2 -translate-y-1/2">
+                    <CreditCard className="h-6 w-6 text-yellow-400" />
+                  </div>
+                   <div className="absolute bottom-[15%] left-[15%] p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg transform -translate-x-1/2 translate-y-1/2">
                     <BarChart3 className="h-6 w-6 text-yellow-400" />
                   </div>
-                  <div className="absolute top-1/2 -left-8 p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg">
-                    <Clock className="h-6 w-6 text-yellow-400" />
+                   <div className="absolute bottom-[15%] right-[15%] p-3 bg-black rounded-lg border border-yellow-500/20 shadow-lg transform translate-x-1/2 translate-y-1/2">
+                    <Building className="h-6 w-6 text-yellow-400" />
                   </div>
                 </div>
               </div>
